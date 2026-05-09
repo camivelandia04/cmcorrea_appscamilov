@@ -35,11 +35,19 @@ st.markdown("""
 
 /* Cards */
 [data-testid="stVerticalBlockBorderWrapper"] {
-    background: rgba(255,255,255,0.08);
+    background: rgba(59, 130, 246, 0.18);
+    border: 1px solid rgba(255,255,255,0.15);
     border-radius: 18px;
-    padding: 15px;
-    backdrop-filter: blur(8px);
+    padding: 18px;
+    backdrop-filter: blur(12px);
     min-height: 420px;
+    box-shadow: 0px 8px 20px rgba(0,0,0,0.25);
+    transition: all 0.3s ease-in-out;
+}
+
+[data-testid="stVerticalBlockBorderWrapper"]:hover {
+    transform: translateY(-4px);
+    background: rgba(96, 165, 250, 0.22);
 }
 
 /* Títulos de apps */
