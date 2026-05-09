@@ -1,22 +1,76 @@
 import streamlit as st
 from PIL import Image
 
-st.set_page_config(layout="wide")
+# ---------------- CONFIG ----------------
+st.set_page_config(
+    page_title="Portafolio Camilo Velandia 2026-1",
+    page_icon="🚀",
+    layout="wide"
+)
 
-st.title("Aplicaciones de Inteligencia Artificial")
+# ---------------- ESTILOS PERSONALIZADOS ----------------
+st.markdown("""
+<style>
+.main-title {
+    text-align: center;
+    font-size: 42px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
 
+.subtitle {
+    text-align: center;
+    font-size: 20px;
+    color: gray;
+    margin-bottom: 30px;
+}
+
+.card {
+    border-radius: 20px;
+    padding: 20px;
+    background-color: #1e1e1e;
+    box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
+    margin-bottom: 25px;
+    min-height: 420px;
+}
+
+.card-title {
+    font-size: 22px;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 10px;
+}
+
+.card-description {
+    text-align: center;
+    color: #cfcfcf;
+    min-height: 60px;
+}
+</style>
+""", unsafe_allow_html=True)
+
+# ---------------- HEADER ----------------
+st.markdown(
+    '<div class="main-title">🚀 Portafolio Camilo Velandia 2026-1</div>',
+    unsafe_allow_html=True
+)
+
+st.markdown(
+    '<div class="subtitle">Repositorio de ejercicios y aplicaciones</div>',
+    unsafe_allow_html=True
+)
+
+# ---------------- SIDEBAR ----------------
 with st.sidebar:
-    st.subheader("Portafolio de Aplicaciones IA")
+    st.header("📂 Navegación")
     st.write(
         "Explora aplicaciones de inteligencia artificial, visión computacional, "
-        "procesamiento de lenguaje natural, IoT, realidad aumentada y juegos interactivos."
+        "NLP, IoT, juegos y realidad aumentada."
     )
 
-url_ia = "https://sites.google.com/view/aplicacionesdeia/inicio"
-st.subheader("Repositorio de ejercicios y aplicaciones")
-st.write(f"Acceso: [Enlace]({url_ia})")
+    busqueda = st.text_input("🔎 Buscar aplicación")
 
-# -------- LISTA DE APPS --------
+# ---------------- APPS ----------------
 apps = [
     ("ChatPDF", "Consulta PDFs con IA", "chatpdf.png",
      "https://chatpdf-2gkgpbmd3vnq2htowffrjt.streamlit.app/"),
@@ -79,15 +133,35 @@ apps = [
      "https://yolov5-jcz3x2ubaashsectv3advq.streamlit.app/")
 ]
 
-# -------- GRID DINÁMICO 4 COLUMNAS --------
+# ---------------- FILTRO DE BÚSQUEDA ----------------
+if busqueda:
+    apps = [app for app in apps if busqueda.lower() in app[0].lower()]
+
+# ---------------- GRID ----------------
 cols = st.columns(4)
 
 for i, app in enumerate(apps):
     nombre, descripcion, imagen, url = app
 
     with cols[i % 4]:
-        image = Image.open(imagen)
-        st.subheader(nombre)
-        st.image(image, width=180)
-        st.write(descripcion)
-        st.write(f"[Abrir aplicación]({url})")
+        st.markdown('<div class="card">', unsafe_allow_html=True)
+
+        try:
+            image = Image.open(imagen)
+            st.image(image, use_container_width=True)
+        except:
+            st.warning(f"Falta imagen: {imagen}")
+
+        st.markdown(
+            f'<div class="card-title">{nombre}</div>',
+            unsafe_allow_html=True
+        )
+
+        st.markdown(
+            f'<div class="card-description">{descripcion}</div>',
+            unsafe_allow_html=True
+        )
+
+        st.link_button("Abrir aplicación", url)
+
+        st.markdown('</div>', unsafe_allow_html=True)
