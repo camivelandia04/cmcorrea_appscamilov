@@ -8,7 +8,7 @@ st.set_page_config(
     layout="wide"
 )
 
-# ---------------- CSS ----------------
+# ---------------- ESTILOS ----------------
 st.markdown("""
 <style>
 .main-title {
@@ -25,36 +25,17 @@ st.markdown("""
     margin-bottom: 40px;
 }
 
-.card {
-    background-color: #1f1f1f;
-    border-radius: 18px;
-    padding: 20px;
-    height: 500px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    margin-bottom: 25px;
-    box-shadow: 0px 4px 12px rgba(0,0,0,0.2);
-}
-
-.card-title {
+.app-title {
     text-align: center;
-    font-size: 22px;
+    font-size: 20px;
     font-weight: bold;
-    margin-top: 15px;
-    margin-bottom: 10px;
+    margin-top: 10px;
 }
 
-.card-description {
+.app-description {
     text-align: center;
-    color: #d0d0d0;
+    color: #cfcfcf;
     min-height: 60px;
-    margin-bottom: 20px;
-}
-
-.image-container {
-    display: flex;
-    justify-content: center;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -70,12 +51,12 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# ---------------- FUNCIÓN PARA UNIFORMAR IMÁGENES ----------------
-def resize_image(image_path, size=(250, 180)):
+# ---------------- FUNCIÓN IMÁGENES ----------------
+def resize_image(image_path, size=(260, 180)):
     try:
-        image = Image.open(image_path)
-        image = image.resize(size)
-        return image
+        img = Image.open(image_path)
+        img = img.resize(size)
+        return img
     except:
         return None
 
@@ -142,33 +123,29 @@ apps = [
      "https://yolov5-jcz3x2ubaashsectv3advq.streamlit.app/")
 ]
 
-# ---------------- GRID UNIFORME ----------------
-cols = st.columns(4)
+# ---------------- GRID LIMPIO ----------------
+for fila in range(0, len(apps), 4):
+    cols = st.columns(4)
 
-for i, app in enumerate(apps):
-    nombre, descripcion, imagen, url = app
+    for col, app in zip(cols, apps[fila:fila+4]):
+        nombre, descripcion, imagen, url = app
 
-    with cols[i % 4]:
-        with st.container():
-            st.markdown('<div class="card">', unsafe_allow_html=True)
+        with col:
+            with st.container(border=True):
 
-            img = resize_image(imagen)
+                img = resize_image(imagen)
 
-            if img:
-                st.image(img)
-            else:
-                st.warning(f"Imagen faltante: {imagen}")
+                if img:
+                    st.image(img)
 
-            st.markdown(
-                f'<div class="card-title">{nombre}</div>',
-                unsafe_allow_html=True
-            )
+                st.markdown(
+                    f'<div class="app-title">{nombre}</div>',
+                    unsafe_allow_html=True
+                )
 
-            st.markdown(
-                f'<div class="card-description">{descripcion}</div>',
-                unsafe_allow_html=True
-            )
+                st.markdown(
+                    f'<div class="app-description">{descripcion}</div>',
+                    unsafe_allow_html=True
+                )
 
-            st.link_button("🚀 Abrir aplicación", url)
-
-            st.markdown('</div>', unsafe_allow_html=True)
+                st.link_button("🚀 Abrir aplicación", url)
