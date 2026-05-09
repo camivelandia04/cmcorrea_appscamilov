@@ -8,7 +8,7 @@ st.set_page_config(
     layout="wide"
 )
 
-# ---------------- ESTILOS PERSONALIZADOS ----------------
+# ---------------- CSS ----------------
 st.markdown("""
 <style>
 .main-title {
@@ -21,30 +21,40 @@ st.markdown("""
 .subtitle {
     text-align: center;
     font-size: 20px;
-    color: gray;
-    margin-bottom: 30px;
+    color: #9e9e9e;
+    margin-bottom: 40px;
 }
 
 .card {
-    border-radius: 20px;
+    background-color: #1f1f1f;
+    border-radius: 18px;
     padding: 20px;
-    background-color: #1e1e1e;
-    box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
+    height: 500px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     margin-bottom: 25px;
-    min-height: 420px;
+    box-shadow: 0px 4px 12px rgba(0,0,0,0.2);
 }
 
 .card-title {
+    text-align: center;
     font-size: 22px;
     font-weight: bold;
-    text-align: center;
-    margin-top: 10px;
+    margin-top: 15px;
+    margin-bottom: 10px;
 }
 
 .card-description {
     text-align: center;
-    color: #cfcfcf;
+    color: #d0d0d0;
     min-height: 60px;
+    margin-bottom: 20px;
+}
+
+.image-container {
+    display: flex;
+    justify-content: center;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -60,15 +70,14 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# ---------------- SIDEBAR ----------------
-with st.sidebar:
-    st.header("📂 Navegación")
-    st.write(
-        "Explora aplicaciones de inteligencia artificial, visión computacional, "
-        "NLP, IoT, juegos y realidad aumentada."
-    )
-
-    busqueda = st.text_input("🔎 Buscar aplicación")
+# ---------------- FUNCIÓN PARA UNIFORMAR IMÁGENES ----------------
+def resize_image(image_path, size=(250, 180)):
+    try:
+        image = Image.open(image_path)
+        image = image.resize(size)
+        return image
+    except:
+        return None
 
 # ---------------- APPS ----------------
 apps = [
@@ -133,35 +142,33 @@ apps = [
      "https://yolov5-jcz3x2ubaashsectv3advq.streamlit.app/")
 ]
 
-# ---------------- FILTRO DE BÚSQUEDA ----------------
-if busqueda:
-    apps = [app for app in apps if busqueda.lower() in app[0].lower()]
-
-# ---------------- GRID ----------------
+# ---------------- GRID UNIFORME ----------------
 cols = st.columns(4)
 
 for i, app in enumerate(apps):
     nombre, descripcion, imagen, url = app
 
     with cols[i % 4]:
-        st.markdown('<div class="card">', unsafe_allow_html=True)
+        with st.container():
+            st.markdown('<div class="card">', unsafe_allow_html=True)
 
-        try:
-            image = Image.open(imagen)
-            st.image(image, use_container_width=True)
-        except:
-            st.warning(f"Falta imagen: {imagen}")
+            img = resize_image(imagen)
 
-        st.markdown(
-            f'<div class="card-title">{nombre}</div>',
-            unsafe_allow_html=True
-        )
+            if img:
+                st.image(img)
+            else:
+                st.warning(f"Imagen faltante: {imagen}")
 
-        st.markdown(
-            f'<div class="card-description">{descripcion}</div>',
-            unsafe_allow_html=True
-        )
+            st.markdown(
+                f'<div class="card-title">{nombre}</div>',
+                unsafe_allow_html=True
+            )
 
-        st.link_button("Abrir aplicación", url)
+            st.markdown(
+                f'<div class="card-description">{descripcion}</div>',
+                unsafe_allow_html=True
+            )
 
-        st.markdown('</div>', unsafe_allow_html=True)
+            st.link_button("🚀 Abrir aplicación", url)
+
+            st.markdown('</div>', unsafe_allow_html=True)
